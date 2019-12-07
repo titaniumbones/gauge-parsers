@@ -148,7 +148,7 @@ async function getWOJSON (stationData, needCors = true) {
       end = moment().format('YYYY-MM-DD'),
       headers = {Origin: "localhost"}
   params = `?param1=47&start_date=${start}&end_date=${end}&station=${stationData["gaugeID"]}`,
-  cors = `http://localhost:9090/`; // `https://cors-anywhere.herokuapp.com/`
+  cors = `http://hackinghistory.ca:9090/`; // `https://cors-anywhere.herokuapp.com/`
   let url = `https://wateroffice.ec.gc.ca/services/real_time_graph/json/inline${params}`;
   if (needCors) {url = `${cors}${url}`;}
   console.log(url);
