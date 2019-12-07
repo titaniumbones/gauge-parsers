@@ -5,6 +5,7 @@
 */
 const streetsville = {
   "name": "Credit River at Streetsville",
+  "slug": "lowercredit",
   "gaugeType": "wateroffice",
   "gaugeID": "02HB029",
   "units": "cms",
@@ -34,7 +35,7 @@ const streetsville = {
         gaugeType: "grca",
         gaugeID: 'Shand Dam Discharge',
         "units": "cms",
-        slug: "gorge",
+        slug: "grand",
         points: {},
         minHeight: 5,
         levels: [[0,4.6,"bad"], [4.6,8,"shoulder"], [8,50,"good"],[50,100,"shoulder"]],
@@ -170,6 +171,7 @@ async function processWOData (spot=streetsville) {
     meta.height = Number(item[1]);
     meta.quality = testGood(item[1], spot);
     meta.units = spot.units;
+    meta.data = item;
     const itemObj =  { x: new Date(item[0]),
                        y: item[1],
                        meta: meta
