@@ -97,7 +97,8 @@ async function getGrandJSON (stationData) {
       console.log(res.headers.get('Content-Type'))
       return res.json()
     })
-    .then ( (json) => { console.log(json);return json[0].data} )
+  .then ( (json) => { // console.log(json);
+                      return json[0].data} )
     .catch(function(error){console.log(error);});
 }
 
@@ -108,13 +109,14 @@ async function getcvcJSON (stationData) {
       start = moment().subtract(4, 'days').format('YYYY-MM-DD'),
       end = moment().format('YYYY-MM-DD'),
       url = `${baseUrl}&ts_id=${id}&from=${start}&to=${end}&dateformat=UNIX`;
-  console.log(url)
+  // console.log(url)
   return await fetch(url)
     .then ( async (res) => {
-      console.log(res.headers.get('Content-Type'))
+      // console.log(res.headers.get('Content-Type'))
       return res.json()
     })
-    .then ( (json) => { console.log(json);return json[0].data} )
+  .then ( (json) => { // console.log(json);
+                      return json[0].data} )
     .catch(function(error){console.log(error);});
 }
 
@@ -151,14 +153,15 @@ async function getWOJSON (stationData, needCors = true) {
   cors = `http://hackinghistory.ca:9090/`; // `https://cors-anywhere.herokuapp.com/`
   let url = `https://wateroffice.ec.gc.ca/services/real_time_graph/json/inline${params}`;
   if (needCors) {url = `${cors}${url}`;}
-  console.log(url);
+  // console.log(url);
   // let target = `${url}${params}`;
   return await fetch(url, {headers: headers})
     .then ( async (res) => {
-      console.log(res.headers.get('Content-Type'))
+      // console.log(res.headers.get('Content-Type'))
       return res.json()
     })
-    .then ( (json) => { console.log(json);return json["47"].provisional} )
+  .then ( (json) => { // console.log(json);
+                      return json["47"].provisional} )
     .catch(function(error){console.log(error);});
 }
 
@@ -182,6 +185,6 @@ async function processWOData (spot=streetsville) {
 }
 
 async function processGauge (spot=irvine, mapper=gaugeDict) {
-  console.log(spot.gaugeType, mapper[spot.gaugeType]);
+  // console.log(spot.gaugeType, mapper[spot.gaugeType]);
   return await mapper[spot.gaugeType](spot);
 }
