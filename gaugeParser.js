@@ -36,7 +36,10 @@ const streetsville = {
         gaugeID: 'Shand Dam Discharge',
         "units": "cms",
         slug: "grand",
-        points: {},
+        points: {
+          putin: [43.4379897,-80.2842689],
+          takeout:[43.662701, -80.453265]
+        },
         minHeight: 5,
         levels: [[0,4.6,"bad"], [4.6,8,"shoulder"], [8,50,"good"],[50,100,"shoulder"]],
       },
