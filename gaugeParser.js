@@ -55,6 +55,10 @@ const streetsville = {
       },
       rivers =[elora, streetsville, upperCredit, irvine];
 
+
+const cors = `http://hackinghistory.ca:9090/`; // `https://cors-anywhere.herokuapp.com/`
+
+
 /* DICTIONARY mapping gauge type to function */
 
 // I think fn symbols are hoisted so should be ok here?
