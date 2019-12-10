@@ -22,9 +22,8 @@ const streetsville = {
         "slug": "irvine",
         "units": "cms",
         "points":{ 
-          "putin": [] ,
-          "takeout": [] ,
-          "takeout2": []
+          "putin": [43.702321,-80.445578] ,
+          "takeout": [43.662701, -80.453265] 
         },
         "levels": [[0,4.6,"bad"], [4.6,8,"shoulder"], [8,50,"good"],[50,100,"shoulder"]],
         "qualityPeaks": [ [0,"bad"], [85, "good"], [170, "bad"], [290, "bad"] ],
@@ -56,7 +55,7 @@ const streetsville = {
       rivers =[elora, streetsville, upperCredit, irvine];
 
 
-const cors = `http://hackinghistory.ca:9090/`; // `https://cors-anywhere.herokuapp.com/`
+const cors = `https://hackinghistory.ca:9090/`; // `https://cors-anywhere.herokuapp.com/`
 
 
 /* DICTIONARY mapping gauge type to function */
@@ -66,6 +65,12 @@ const gaugeDict = {
   cvc: processWiskiData,
   grca: processWiskiData,
   wateroffice: processWOData
+}
+
+// stupid to have this in two places but I need it in this form for the service worker
+// in the other repo, which will return fetched data in a `postMessage` 
+const dataProcDict = {
+  cvc: false
 }
 
 /* TESTER for all gauge types */
@@ -96,33 +101,42 @@ function testGood (level, spotMeta=streetsville) {
 // accessed 2019-12-04
 // also cf variable definitions in https://apps.grandriver.ca/waterdata/kiwischarts/rf_uppergrand.aspx
 // doesn't appear to accept a date parameter -- suggests that historical data is available elsewhere
-async function getGrandJSON (stationData) {
+async function getGrandJSON (stationData, needCors=true) {
   let id = stationData.gaugeID,
-      url = `https://apps.grandriver.ca/waterdata/kiwischarts/wiskiData/RF_Charts_UpperGrand/${id}.json`
-  return await fetch(url)
-    .then ( async (res) => {
+      url = `https://apps.grandriver.ca/waterdata/kiwischarts/wiskiData/RF_Charts_UpperGrand/${id}.json`,
+      headers={'Spot-ID': stationData.slug};
+  if (needCors) {url = `${cors}${url}`;}
+
+  return await fetch(url, {headers: headers})
+  .then ( async (res) => {
       console.log(res.headers.get('Content-Type'))
       return res.json()
     })
-  .then ( (json) => { // console.log(json);
+  .then ( (json) => { console.log(json);
                       return json[0].data} )
-    .catch(function(error){console.log(error);});
+  .catch(function(error){console.log(error);});
 }
 
 
-async function getcvcJSON (stationData) {
+async function getcvcJSON (stationData, needCors=true) {
+  console.log("GETCVC info", stationData)
   let id = stationData.gaugeID,
       baseUrl = 'https://waterinfo.cvc.ca/KiWIS/KiWIS?service=kisters&type=queryServices&request=getTimeseriesValues&datasource=0&format=dajson&',
       start = moment().subtract(4, 'days').format('YYYY-MM-DD'),
       end = moment().format('YYYY-MM-DD'),
       url = `${baseUrl}&ts_id=${id}&from=${start}&to=${end}&dateformat=UNIX`;
-  // console.log(url)
-  return await fetch(url)
-    .then ( async (res) => {
+      headers={'ATTEMPT': 'uppercredit'};
+  // if (needCors) {url = `${cors}${url}`;}
+ // console.log(url)
+  return await fetch(url , {referrer: `${location.href}#${stationData.slug}:${stationData.gaugetype}`}
+                    )
+  .then ( async (res) => {
+    // console.log('RES', res)
+     // res.clone().json().then( (t) => console.log(t))
       // console.log(res.headers.get('Content-Type'))
       return res.json()
     })
-  .then ( (json) => { // console.log(json);
+  .then ( (json) => { console.log('JSON', json);
                       return json[0].data} )
     .catch(function(error){console.log(error);});
 }
@@ -155,10 +169,9 @@ async function processWiskiData (spot) {
 async function getWOJSON (stationData, needCors = true) {
   let start = moment().subtract(4, 'days').format('YYYY-MM-DD'),
       end = moment().format('YYYY-MM-DD'),
-      headers = {Origin: "localhost"}
-  params = `?param1=47&start_date=${start}&end_date=${end}&station=${stationData["gaugeID"]}`,
-  cors = `http://hackinghistory.ca:9090/`; // `https://cors-anywhere.herokuapp.com/`
-  let url = `https://wateroffice.ec.gc.ca/services/real_time_graph/json/inline${params}`;
+      headers = {'Origin': "localhost", 'X-Spot-ID': stationData.slug}
+  params = `?param1=47&start_date=${start}&end_date=${end}&station=${stationData["gaugeID"]}`;
+    let url = `https://wateroffice.ec.gc.ca/services/real_time_graph/json/inline${params}`;
   if (needCors) {url = `${cors}${url}`;}
   // console.log(url);
   // let target = `${url}${params}`;
