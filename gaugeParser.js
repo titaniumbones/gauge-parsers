@@ -15,10 +15,24 @@ const streetsville = {
   "qualityPeaks": [ [0,"bad"], [85, "good"], [170, "bad"], [290, "bad"] ],
   "minHeight": 4.6
 },
+      // irvine =   {
+      //   "name": "Irvine",
+      //   "gaugeType": "wateroffice",
+      //   "gaugeID": "02GA005",
+      //   "slug": "irvine",
+      //   "units": "cms",
+      //   "points":{ 
+      //     "putin": [43.702321,-80.445578] ,
+      //     "takeout": [43.662701, -80.453265] 
+      //   },
+      //   "levels": [[0,4.6,"bad"], [4.6,8,"shoulder"], [8,50,"good"],[50,100,"shoulder"]],
+      //   "qualityPeaks": [ [0,"bad"], [85, "good"], [170, "bad"], [290, "bad"] ],
+      //   "minHeight": 4.6
+      // },
       irvine =   {
         "name": "Irvine",
-        "gaugeType": "wateroffice",
-        "gaugeID": "02GA005",
+        "gaugeType": "grca",
+        "gaugeID": "Irvine R. Salem",
         "slug": "irvine",
         "units": "cms",
         "points":{ 
@@ -29,6 +43,7 @@ const streetsville = {
         "qualityPeaks": [ [0,"bad"], [85, "good"], [170, "bad"], [290, "bad"] ],
         "minHeight": 4.6
       },
+
       elora = {
         name: "Elora Gorge at Shand Dam",
         gaugeType: "grca",
